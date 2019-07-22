@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include <math.h>
 
+#define SENSOR_DIST 4
 #define FILTRO_CONTROLE 50
 
 int x;
@@ -14,8 +15,7 @@ uint8_t vetor[6] = {218, 130, 0, 1, 0, 1};
 
 HobbyRadioReceiver rec( 2, A0, A1);
 
-void setup()
-{
+void setup(){
   Serial.begin(9600);
   Serial.print( "Num Channels: " );
   Serial.println(rec.getNumChannels());
@@ -78,17 +78,14 @@ void converte(){
 
   if(velocidade < 0) direcao *= -1;
   
-  controle(-velocidade, direcao,100);
+  controle(-velocidade, direcao,10); 
 }
 
-void loop()
-{
-  
-  converte();
+void loop(){
+    converte();
 //  Serial.print(x);
 //  Serial.print(" ");
 //  Serial.println(y);
-
 }
 
 
