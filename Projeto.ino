@@ -3,7 +3,7 @@
 #include <math.h>
 
 #define SENSOR_DIST 4
-#define FILTRO_CONTROLE 50
+#define FILTRO_CONTROLE 65
 
 int x;
 int y;
@@ -28,18 +28,16 @@ void setup(){
 }
 
 
-void controle(int vel, int dir, int limite){
-  if(vel >= limite) vel = limite;
-  if(dir >= limite) dir = limite;
-  if(vel <= -limite) vel = -limite;
-  if(dir <= -limite) dir = -limite;
-  
+void controle(float vel, float dir, float limite){
+  float fatorVel,fatorDir;
+  fatorVel = (vel/100) * abs(limite);
+  fatorDir = (dir/100) * abs(limite);
   if(vel >= 10 || vel <= -10){
-    y = 130 + vel;
+    y = 130 + fatorVel;
     if(y < 35) y = 35;
     if(y > 230) y = 230;
     
-    x = 130 + dir;
+    x = 130 + fatorDir;
     if(x < 35) x = 35;
     if(x > 230) x = 230;
     
@@ -47,7 +45,9 @@ void controle(int vel, int dir, int limite){
     x = 130;
     y = 123;
   }
-
+  Serial.print(x);
+  Serial.print(" ");
+  Serial.println(y);
 }
 
 
@@ -78,7 +78,7 @@ void converte(){
 
   if(velocidade < 0) direcao *= -1;
   
-  controle(-velocidade, direcao,10); 
+  controle(-velocidade, direcao,20); 
 }
 
 void loop(){
