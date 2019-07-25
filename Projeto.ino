@@ -15,6 +15,7 @@ int calibragemx, calibragemy;
 long distancia;
 long distancia2;
 int modo;
+#define fatordistancia 50
 
 uint8_t vetor[6] = {218, 130, 0, 1, 0, 1};
 
@@ -35,14 +36,15 @@ void setup(){
 }
 
 void pisca(){
-  
-  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));    
-  
+  if(distancia < fatordistancia
+        && distancia2 < fatordistancia)
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));    
 }
 
 void controle(float vel, float dir, float limite){
   float fatorVel,fatorDir;
-  if(distancia >= 50 && distancia2 >= 50 || vel < 0){
+  if(distancia >= fatordistancia && 
+          distancia2 >= fatordistancia || vel < 0){
     fatorVel = (vel/100) * abs(limite);
     fatorDir = (dir/100) * abs(limite);
     if(vel >= 10 || vel <= -10){
