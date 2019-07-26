@@ -38,7 +38,7 @@ void setup(){
 
 void pisca(){
   if(distancia < FILTRO_DISTANCIA
-        && distancia2 < FILTRO_DISTANCIA)
+        || distancia2 < FILTRO_DISTANCIA)
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));    
 }
 
@@ -98,7 +98,7 @@ void converte(){
 
   if(velocidade < 0) direcao *= -1;
 
-  if(digitalRead(PINO_CONTROLE_MODO_ANALOGICO)) modo = 100;
+  if(digitalRead(PINO_CONTROLE_MODO_ANALOGICO)) modo = 70;
   else modo = 25;
   
   controle(-velocidade, direcao,modo); 
@@ -116,6 +116,7 @@ void loop(){
   Serial.print(x);
   Serial.print(" ");
   Serial.println(y);
+  pisca();
 }
 
 
