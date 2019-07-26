@@ -5,7 +5,6 @@
 Ultrasonic ultrassom(8,7);
 Ultrasonic ultrassom2(9,10);
 
-#define SENSOR_DIST 4
 #define FILTRO_CONTROLE 65
 
 int x;
