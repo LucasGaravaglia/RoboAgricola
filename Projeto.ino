@@ -6,6 +6,7 @@ Ultrasonic ultrassom(8,7);
 Ultrasonic ultrassom2(9,10);
 
 #define FILTRO_CONTROLE 65
+#define fatordistancia 50
 
 int x;
 int y;
@@ -14,7 +15,6 @@ int calibragemx, calibragemy;
 long distancia;
 long distancia2;
 int modo;
-#define fatordistancia 50
 
 uint8_t vetor[6] = {218, 130, 0, 1, 0, 1};
 
