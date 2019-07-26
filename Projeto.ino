@@ -6,7 +6,8 @@ Ultrasonic ultrassom(8,7);
 Ultrasonic ultrassom2(9,10);
 
 #define FILTRO_CONTROLE 65
-#define fatordistancia 50
+#define FILTRO_DISTANCIA 50
+#define PINO_CONTROLE_MODO_ANALOGICO 2
 
 int x;
 int y;
@@ -26,6 +27,7 @@ void setup(){
   Serial.print( "Num Channels: " );
   Serial.println(rec.getNumChannels());
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(PINO_CONTROLE_MODO_ANALOGICO, INPUT);
 
   Wire.begin(0x52);                // join i2c bus with address #8
   Wire.onRequest(requestEvent); // register event
@@ -35,17 +37,17 @@ void setup(){
 }
 
 void pisca(){
-  if(distancia < fatordistancia
-        && distancia2 < fatordistancia)
+  if(distancia < FILTRO_DISTANCIA
+        && distancia2 < FILTRO_DISTANCIA)
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));    
 }
 
 void controle(float vel, float dir, float limite){
   float fatorVel,fatorDir;
-  if(distancia >= fatordistancia && 
-          distancia2 >= fatordistancia || vel < 0){
+  if(distancia >= FILTRO_DISTANCIA && distancia2 >= FILTRO_DISTANCIA || vel < 0){
     fatorVel = (vel/100) * abs(limite);
     fatorDir = (dir/100) * abs(limite);
+    
     if(vel >= 10 || vel <= -10){
       y = 130 + fatorVel;
       if(y < 35) y = 35;
@@ -59,11 +61,13 @@ void controle(float vel, float dir, float limite){
       x = 130;
       y = 123;
     }
+    
   }else{
       pisca();
       x = 130;
       y = 123;
   }
+  
 }
 
 
@@ -94,7 +98,7 @@ void converte(){
 
   if(velocidade < 0) direcao *= -1;
 
-  if(digitalRead(2))modo = 100;
+  if(digitalRead(PINO_CONTROLE_MODO_ANALOGICO)) modo = 100;
   else modo = 25;
   
   controle(-velocidade, direcao,modo); 
