@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int mkfile(char *arquivo){
+	FILE *saida;
+	saida = fopen(arquivo,"w");
+	if(saida == NULL) return 1;
+	system("head -qn10 /dev/ttyACM0 >> args.txt");
+	fclose(saida);
+	return 0;
+
+}
+
+void getcoords(char *orig, char *lat, char *log){
+	lat[0] = orig[7];
+	lat[1] = orig[8];
+	lat[2] = orig[9];
+	lat[3] = orig[10];
+	lat[4] = orig[11];
+	lat[5] = orig[12];
+	lat[6] = orig[13];
+	lat[7] = orig[14];
+	lat[8] = orig[15];
+	lat[9] = orig[16];
+	lat[10] = ' ';
+	lat[11] = orig[18];
+	lat[12] = 0;	
+
+	log[0] = orig[20];
+	log[1] = orig[21];
+	log[2] = orig[22];
+	log[3] = orig[23];
+	log[4] = orig[24];
+	log[5] = orig[25];
+	log[6] = orig[26];
+	log[7] = orig[27];
+	log[8] = orig[28];
+	log[9] = orig[29];
+	log[10] = orig[30];
+	log[11] = ' ';
+	log[12] = orig[32];
+}
+
+void getcoords_raw(char *txt, char *dst){
+	int i;
+	if(txt[0] == '$' && txt[1] == 'G' && txt[2] == 'P' && txt[3] == 'G' && txt[4] == 'L' && txt[5] == 'L'){
+		strcpy(dst,txt);
+	}
+	
+}
+
+int readfile(char *arquivo, char *m, int *k){
+	int i;
+	char temp[250];
+	FILE *entrada;
+	entrada = fopen(arquivo,"r");
+	if(entrada == NULL) return 1;
+	for(i=0;!feof(entrada);i++){
+		fscanf(entrada,"%[^\n]%*c",temp);
+		getcoords_raw(temp,m);
+	}
+	*k = i;
+	fclose(entrada);
+	return 0;
+
+}
+
+int gravar(char *arquivo, char *lat, char *log){
+	FILE *saida;
+	saida = fopen(arquivo, "w");
+	if(saida == NULL) return 1;
+	fprintf(saida,"Latitude: %s ||| Longitude: %s",lat,log);
+	fclose(saida);
+	return 0;
+}
+
+int main(){
+	int i,k;
+	char a[300],lat[50],log[50];
+	mkfile("args.txt");
+	readfile("args.txt",a,&k);
+	getcoords(a,lat,log);
+	gravar("location.txt",lat,log);
+	system("rm -r args.txt");
+	return 0;
+}
